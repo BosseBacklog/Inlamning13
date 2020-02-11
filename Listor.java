@@ -79,7 +79,7 @@ public class Listor {
 		while (true) {
 			System.out.println("Hur många värden ska skrivas in?");
 			sc.nextLine();
-			if (sc.hasNextInt() == true) {
+			if (sc.hasNextInt() == false) {
 				System.err.println("Invalid input  ");
 				continue;
 			} else {
@@ -96,13 +96,20 @@ public class Listor {
 				antalPersonerSomSkaLaggasIn--;
 				
 
-				System.out.println("Skriv in poäng på person nummer ");
 				
-//				Lägg till en check för att kolla att nästa är int
+				while (true) {
+					System.out.println("Skriv in poäng på person nummer " +raknarePersonSkriv);
+					sc.nextLine();
+				if (sc.hasNextInt() == false) {
+					System.err.println("Invalid input");
+					continue;
+				} else {
 				poang.add(sc.nextInt());
 				raknarePersonSkriv++;
-			} else {
-				System.err.println("Invalid input");
+				break;
+				}
+				
+				}
 			}
 		}
 
