@@ -1,13 +1,11 @@
 package inl13;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,11 +26,16 @@ public class Listor {
 	int antalPersonerSomSkaLaggasIn = 0;
 	int raknarePersonSkriv = 1;
 	Scanner sc = new Scanner(System.in);
+
+	String NamngeFil;
+	String s;
 	String Filnamn = "matte.txt";
 	int g;
 	int vg;
+	Calendar cal = Calendar.getInstance();
 
-	public void Start() {
+	public void Start() throws IOException {
+
 		while (true) {
 //			sc.nextLine();
 			betyg.add("IG");
@@ -88,27 +91,28 @@ public class Listor {
 			}
 
 		}
+		System.out.println("Ange skrivningens namn (namnet måste vara unikt) : ");
+		Datum();
+		FilExisterar();
 		while (antalPersonerSomSkaLaggasIn != 0) {
 			System.out.println("Ange namn på person nummer " + raknarePersonSkriv);
 
 			if (sc.hasNext() == true) {
 				namn.add(sc.next());
 				antalPersonerSomSkaLaggasIn--;
-				
 
-				
 				while (true) {
-					System.out.println("Skriv in poäng på person nummer " +raknarePersonSkriv);
+					System.out.println("Skriv in poäng på person nummer " + raknarePersonSkriv);
 					sc.nextLine();
-				if (sc.hasNextInt() == false) {
-					System.err.println("Invalid input");
-					continue;
-				} else {
-				poang.add(sc.nextInt());
-				raknarePersonSkriv++;
-				break;
-				}
-				
+					if (sc.hasNextInt() == false) {
+						System.err.println("Invalid input");
+						continue;
+					} else {
+						poang.add(sc.nextInt());
+						raknarePersonSkriv++;
+						break;
+					}
+
 				}
 			}
 		}
@@ -120,11 +124,13 @@ public class Listor {
 		for (int i = 0; i < betyg.size(); i++) {
 			System.out.println(betyg.get(i));
 		}
+		
+		FilPrint();
+
 	}
 
 	public void FilPrint() throws IOException {
-
-		BufferedWriter out = new BufferedWriter(new FileWriter("matte.txt"));
+		BufferedWriter out = new BufferedWriter(new FileWriter(Filnamn));
 		out.write("Hejhopp \n=========================\n");
 
 		for (int i = 0; i < namn.size(); i++) {
@@ -142,4 +148,57 @@ public class Listor {
 		}
 		out.close();
 	}
+	
+	public void Datum() {
+		NamngeFil = sc.next();
+		while (true) {
+
+			System.out.println("Vill du lägga till dagens datum i filnamnet? \nSvara y för ja och n för nej");
+			sc.nextLine();
+			s = sc.nextLine();
+			if (!s.toLowerCase().equals("y") && !s.toLowerCase().equals("n")) {
+				System.err.println("Invalid input  ");
+				continue;
+			}
+
+			if (s.toLowerCase().equals("y")) {
+				Filnamn = NamngeFil + java.time.LocalDate.now() + ".txt";
+				break;
+			}
+			if (s.toLowerCase().equals("n")) {
+				Filnamn = NamngeFil + ".txt";
+				break;
+			}
+
+		}
+		FilExisterar();
+	}
+	
+	public void FilExisterar() {
+		File existera = new File(Filnamn);
+		boolean exists = existera.exists(); 
+		if (exists == true) {
+			System.out.println("En fil med samma namn existerar redan. Vill du skriva över den? \\nSvara y för ja och n för nej");
+			while(true) {
+//				sc.nextLine();
+				s = sc.nextLine();
+				if (!s.toLowerCase().equals("y") && !s.toLowerCase().equals("n")) {
+					System.err.println("Invalid input. Du måste svara y eller n  ");
+					continue;
+				}
+
+				if (s.toLowerCase().equals("y")) {
+					break;
+				}
+				if (s.toLowerCase().equals("n")) {
+						System.out.println("Ange ett nytt namn på filen");
+						Datum();
+						break;
+					
+				}
+				
+			}
+		}
+	}
+
 }
